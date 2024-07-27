@@ -18,8 +18,8 @@ if(isset($_GET['get_id'])){
 
 if(isset($_POST['update'])){
 
-   $video_id = $_POST['video_id'];
-   $video_id = filter_var($video_id, FILTER_SANITIZE_STRING);
+   $pdf_id = $_POST['pdf_id'];
+   $pdf_id = filter_var($pdf_id, FILTER_SANITIZE_STRING);
    $status = $_POST['status'];
    $status = filter_var($status, FILTER_SANITIZE_STRING);
    $title = $_POST['title'];
@@ -29,12 +29,12 @@ if(isset($_POST['update'])){
    $playlist = $_POST['playlist'];
    $playlist = filter_var($playlist, FILTER_SANITIZE_STRING);
 
-   $update_content = $conn->prepare("UPDATE `content` SET title = ?, description = ?, status = ? WHERE id = ?");
-   $update_content->execute([$title, $description, $status, $video_id]);
+   $update_paper = $conn->prepare("UPDATE `paper` SET title = ?, description = ?, status = ? WHERE id = ?");
+   $update_paper->execute([$title, $description, $status, $pdf_id]);
 
    if(!empty($playlist)){
-      $update_playlist = $conn->prepare("UPDATE `content` SET playlist_id = ? WHERE id = ?");
-      $update_playlist->execute([$playlist, $video_id]);
+      $update_playlist = $conn->prepare("UPDATE `paper` SET playlist_id = ? WHERE id = ?");
+      $update_playlist->execute([$playlist, $pdf_id]);
    }
 
    $old_thumb = $_POST['old_thumb'];
@@ -51,8 +51,8 @@ if(isset($_POST['update'])){
       if($thumb_size > 2000000){
          $message[] = 'image size is too large!';
       }else{
-         $update_thumb = $conn->prepare("UPDATE `content` SET thumb = ? WHERE id = ?");
-         $update_thumb->execute([$rename_thumb, $video_id]);
+         $update_thumb = $conn->prepare("UPDATE `paper` SET thumb = ? WHERE id = ?");
+         $update_thumb->execute([$rename_thumb, $pdf_id]);
          move_uploaded_file($thumb_tmp_name, $thumb_folder);
          if($old_thumb != '' AND $old_thumb != $rename_thumb){
             unlink('../uploaded_files/'.$old_thumb);
@@ -60,50 +60,50 @@ if(isset($_POST['update'])){
       }
    }
 
-   $old_video = $_POST['old_video'];
-   $old_video = filter_var($old_video, FILTER_SANITIZE_STRING);
-   $video = $_FILES['video']['name'];
-   $video = filter_var($video, FILTER_SANITIZE_STRING);
-   $video_ext = pathinfo($video, PATHINFO_EXTENSION);
-   $rename_video = unique_id().'.'.$video_ext;
-   $video_tmp_name = $_FILES['video']['tmp_name'];
-   $video_folder = '../uploaded_files/'.$rename_video;
+   $old_pdf = $_POST['old_pdf'];
+   $old_pdf = filter_var($old_pdf, FILTER_SANITIZE_STRING);
+   $pdf = $_FILES['pdf']['name'];
+   $pdf = filter_var($pdf, FILTER_SANITIZE_STRING);
+   $pdf_ext = pathinfo($pdf, PATHINFO_EXTENSION);
+   $rename_pdf = unique_id().'.'.$pdf_ext;
+   $pdf_tmp_name = $_FILES['pdf']['tmp_name'];
+   $pdf_folder = '../uploaded_files/'.$rename_pdf;
 
-   if(!empty($video)){
-      $update_video = $conn->prepare("UPDATE `content` SET video = ? WHERE id = ?");
-      $update_video->execute([$rename_video, $video_id]);
-      move_uploaded_file($video_tmp_name, $video_folder);
-      if($old_video != '' AND $old_video != $rename_video){
-         unlink('../uploaded_files/'.$old_video);
+   if(!empty($pdf)){
+      $update_pdfo = $conn->prepare("UPDATE `paper` SET pdf = ? WHERE id = ?");
+      $update_pdf->execute([$rename_pdf, $pdf_id]);
+      move_uploaded_file($pdf_tmp_name, $pdf_folder);
+      if($old_pdf != '' AND $old_pdf != $rename_pdf){
+         unlink('../uploaded_files/'.$old_pdf);
       }
    }
 
-   $message[] = 'content updated!';
+   $message[] = 'paper updated!';
 
 }
 
-if(isset($_POST['delete_video'])){
+if(isset($_POST['delete_pdf'])){
 
-   $delete_id = $_POST['video_id'];
+   $delete_id = $_POST['pdf_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
 
-   $delete_video_thumb = $conn->prepare("SELECT thumb FROM `content` WHERE id = ? LIMIT 1");
-   $delete_video_thumb->execute([$delete_id]);
-   $fetch_thumb = $delete_video_thumb->fetch(PDO::FETCH_ASSOC);
+   $delete_pdf_thumb = $conn->prepare("SELECT thumb FROM `paper` WHERE id = ? LIMIT 1");
+   $delete_pdf_thumb->execute([$delete_id]);
+   $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
    unlink('../uploaded_files/'.$fetch_thumb['thumb']);
 
-   $delete_video = $conn->prepare("SELECT video FROM `content` WHERE id = ? LIMIT 1");
-   $delete_video->execute([$delete_id]);
-   $fetch_video = $delete_video->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_video['video']);
+   $delete_pdf = $conn->prepare("SELECT pdf FROM `paper` WHERE id = ? LIMIT 1");
+   $delete_pdf->execute([$delete_id]);
+   $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
+   unlink('../uploaded_files/'.$fetch_pdf['pdf']);
 
-   $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE content_id = ?");
+   $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
    $delete_likes->execute([$delete_id]);
-   $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE content_id = ?");
+   $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE paper_id = ?");
    $delete_comments->execute([$delete_id]);
 
-   $delete_content = $conn->prepare("DELETE FROM `content` WHERE id = ?");
-   $delete_content->execute([$delete_id]);
+   $delete_paper = $conn->prepare("DELETE FROM `paper` WHERE id = ?");
+   $delete_paper->execute([$delete_id]);
    header('location:contents.php');
     
 }
@@ -161,29 +161,29 @@ if(isset($_POST['delete_video'])){
    <h1 class="heading">update Paper</h1>
 
    <?php
-      $select_videos = $conn->prepare("SELECT * FROM `content` WHERE id = ? AND tutor_id = ?");
-      $select_videos->execute([$get_id, $tutor_id]);
-      if($select_videos->rowCount() > 0){
-         while($fecth_videos = $select_videos->fetch(PDO::FETCH_ASSOC)){ 
-            $video_id = $fecth_videos['id'];
+      $select_pdfs = $conn->prepare("SELECT * FROM `paper` WHERE id = ? AND tutor_id = ?");
+      $select_pdfs->execute([$get_id, $tutor_id]);
+      if($select_pdfs->rowCount() > 0){
+         while($fecth_pdfs = $select_pdfs->fetch(PDO::FETCH_ASSOC)){ 
+            $pdf_id = $fecth_pdfs['id'];
    ?>
    <form action="" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="video_id" value="<?= $fecth_videos['id']; ?>">
-      <input type="hidden" name="old_thumb" value="<?= $fecth_videos['thumb']; ?>">
-      <input type="hidden" name="old_video" value="<?= $fecth_videos['video']; ?>">
+      <input type="hidden" name="pdf_id" value="<?= $fecth_pdfs['id']; ?>">
+      <input type="hidden" name="old_thumb" value="<?= $fecth_pdfs['thumb']; ?>">
+      <input type="hidden" name="old_pdf" value="<?= $fecth_pdfs['pdf']; ?>">
       <p>update status <span>*</span></p>
       <select name="status" class="box" required>
-         <option value="<?= $fecth_videos['status']; ?>" selected><?= $fecth_videos['status']; ?></option>
+         <option value="<?= $fecth_pdfs['status']; ?>" selected><?= $fecth_pdfs['status']; ?></option>
          <option value="active">active</option>
          <option value="deactive">deactive</option>
       </select>
       <p>update title <span>*</span></p>
-      <input type="text" name="title" maxlength="100" required placeholder="enter video title" class="box" value="<?= $fecth_videos['title']; ?>">
+      <input type="text" name="title" maxlength="100" required placeholder="enter pdf title" class="box" value="<?= $fecth_pdfs['title']; ?>">
       <p>update description <span>*</span></p>
-      <textarea name="description" class="box" required placeholder="write description" maxlength="1000" cols="30" rows="10"><?= $fecth_videos['description']; ?></textarea>
+      <textarea name="description" class="box" required placeholder="write description" maxlength="1000" cols="30" rows="10"><?= $fecth_pdfs['description']; ?></textarea>
       <p>update Category</p>
       <select name="playlist" class="box">
-         <option value="<?= $fecth_videos['playlist_id']; ?>" selected>--select Category</option>
+         <option value="<?= $fecth_pdfs['playlist_id']; ?>" selected>--select Category</option>
          <?php
          $select_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
          $select_playlists->execute([$tutor_id]);
@@ -200,22 +200,22 @@ if(isset($_POST['delete_video'])){
          }
          ?>
       </select>
-      <img src="../uploaded_files/<?= $fecth_videos['thumb']; ?>" alt="">
+      <img src="../uploaded_files/<?= $fecth_pdfs['thumb']; ?>" alt="">
       <p>update Cover</p>
       <input type="file" name="thumb" accept="image/*" class="box">
-      <video src="../uploaded_files/<?= $fecth_videos['video']; ?>" controls></video>
+      <video src="../uploaded_files/<?= $fecth_pdfs['pdf']; ?>" controls></video>
       <p>update Paper</p>
-      <input type="file" name="video" accept="video/*" class="box">
-      <input type="submit" value="update content" name="update" class="btn">
+      <input type="file" name="pdf" accept="pdf/*" class="box">
+      <input type="submit" value="update paper" name="update" class="btn">
       <div class="flex-btn">
-         <a href="view_content.php?get_id=<?= $video_id; ?>" class="option-btn">view Paper</a>
-         <input type="submit" value="delete content" name="delete_video" class="delete-btn">
+         <a href="view_content.php?get_id=<?= $pdf_id; ?>" class="option-btn">view Paper</a>
+         <input type="submit" value="delete paper" name="delete_pdf" class="delete-btn">
       </div>
    </form>
    <?php
          }
       }else{
-         echo '<p class="empty">video not found! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add videos</a></p>';
+         echo '<p class="empty">The paper not found! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add paper</a></p>';
       }
    ?>
 

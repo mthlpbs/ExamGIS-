@@ -16,28 +16,28 @@ if(isset($_GET['get_id'])){
    header('location:contents.php');
 }
 
-if(isset($_POST['delete_video'])){
+if(isset($_POST['delete_pdf'])){
 
-   $delete_id = $_POST['video_id'];
+   $delete_id = $_POST['pdf_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
 
-   $delete_video_thumb = $conn->prepare("SELECT thumb FROM `content` WHERE id = ? LIMIT 1");
-   $delete_video_thumb->execute([$delete_id]);
-   $fetch_thumb = $delete_video_thumb->fetch(PDO::FETCH_ASSOC);
+   $delete_pdf_thumb = $conn->prepare("SELECT thumb FROM `paper` WHERE id = ? LIMIT 1");
+   $delete_pdf_thumb->execute([$delete_id]);
+   $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
    unlink('../uploaded_files/'.$fetch_thumb['thumb']);
 
-   $delete_video = $conn->prepare("SELECT video FROM `content` WHERE id = ? LIMIT 1");
-   $delete_video->execute([$delete_id]);
-   $fetch_video = $delete_video->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_video['video']);
+   $delete_pdf = $conn->prepare("SELECT pdf FROM `paper` WHERE id = ? LIMIT 1");
+   $delete_pdf->execute([$delete_id]);
+   $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
+   unlink('../uploaded_files/'.$fetch_pdf['pdf']);
 
-   $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE content_id = ?");
+   $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
    $delete_likes->execute([$delete_id]);
-   $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE content_id = ?");
+   $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE paper_id = ?");
    $delete_comments->execute([$delete_id]);
 
-   $delete_content = $conn->prepare("DELETE FROM `content` WHERE id = ?");
-   $delete_content->execute([$delete_id]);
+   $delete_paper = $conn->prepare("DELETE FROM `paper` WHERE id = ?");
+   $delete_paper->execute([$delete_id]);
    header('location:contents.php');
     
 }
@@ -112,41 +112,41 @@ if(isset($_POST['delete_comment'])){
 <section class="view-content">
 
    <?php
-      $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ? AND tutor_id = ?");
-      $select_content->execute([$get_id, $tutor_id]);
-      if($select_content->rowCount() > 0){
-         while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){
-            $video_id = $fetch_content['id'];
+      $select_paper = $conn->prepare("SELECT * FROM `paper` WHERE id = ? AND tutor_id = ?");
+      $select_paper->execute([$get_id, $tutor_id]);
+      if($select_paper->rowCount() > 0){
+         while($fetch_paper = $select_paper->fetch(PDO::FETCH_ASSOC)){
+            $pdf_id = $fetch_paper['id'];
 
-            $count_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ? AND content_id = ?");
-            $count_likes->execute([$tutor_id, $video_id]);
+            $count_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ? AND paper_id = ?");
+            $count_likes->execute([$tutor_id, $pdf_id]);
             $total_likes = $count_likes->rowCount();
 
-            $count_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ? AND content_id = ?");
-            $count_comments->execute([$tutor_id, $video_id]);
+            $count_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ? AND paper_id = ?");
+            $count_comments->execute([$tutor_id, $pdf_id]);
             $total_comments = $count_comments->rowCount();
    ?>
    <div class="container">
-      <video src="../uploaded_files/<?= $fetch_content['video']; ?>" autoplay controls poster="../uploaded_files/<?= $fetch_content['thumb']; ?>" class="video"></video>
-      <div class="date"><i class="fas fa-calendar"></i><span><?= $fetch_content['date']; ?></span></div>
-      <h3 class="title"><?= $fetch_content['title']; ?></h3>
+      <video src="../uploaded_files/<?= $fetch_paper['pdf']; ?>" autoplay controls poster="../uploaded_files/<?= $fetch_paper['thumb']; ?>" class="video"></video>
+      <div class="date"><i class="fas fa-calendar"></i><span><?= $fetch_papert['date']; ?></span></div>
+      <h3 class="title"><?= $fetch_papert['title']; ?></h3>
       <div class="flex">
          <div><i class="fas fa-heart"></i><span><?= $total_likes; ?></span></div>
          <div><i class="fas fa-comment"></i><span><?= $total_comments; ?></span></div>
       </div>
-      <div class="description"><?= $fetch_content['description']; ?></div>
+      <div class="description"><?= $fetch_paper['description']; ?></div>
       <form action="" method="post">
          <div class="flex-btn">
-            <input type="hidden" name="video_id" value="<?= $video_id; ?>">
-            <a href="update_content.php?get_id=<?= $video_id; ?>" class="option-btn">update</a>
-            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this video?');" name="delete_video">
+            <input type="hidden" name="pdf_id" value="<?= $pdf_id; ?>">
+            <a href="update_content.php?get_id=<?= $pdf_id; ?>" class="option-btn">update</a>
+            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this paper');" name="delete_pdf">
          </div>
       </form>
    </div>
    <?php
     }
    }else{
-      echo '<p class="empty">no contents added yet! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add videos</a></p>';
+      echo '<p class="empty">no papers added yet! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add papers</a></p>';
    }
       
    ?>
@@ -160,7 +160,7 @@ if(isset($_POST['delete_comment'])){
    
    <div class="show-comments">
       <?php
-         $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE content_id = ?");
+         $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE paper_id = ?");
          $select_comments->execute([$get_id]);
          if($select_comments->rowCount() > 0){
             while($fetch_comment = $select_comments->fetch(PDO::FETCH_ASSOC)){   
@@ -189,23 +189,7 @@ if(isset($_POST['delete_comment'])){
       }
       ?>
       </div>
-   
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-<?php include '../components/footer.php'; ?>
-
 <script src="../js/admin_script.js"></script>
-
 </body>
 </html>

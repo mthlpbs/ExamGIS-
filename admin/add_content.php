@@ -27,7 +27,7 @@ if(isset($_POST['submit'])){
    $rename_thumb = unique_id().'.'.$thumb_ext;
    $thumb_size = $_FILES['thumb']['size'];
    $thumb_tmp_name = $_FILES['thumb']['tmp_name'];
-   $thumb_folder = '../uploaded_files/thumbnail/'.$rename_thumb;
+   $thumb_folder = '../uploaded_files/paper_thumb/'.$rename_thumb;
 
    $pdf = $_FILES['pdf']['name'];
    $pdf = filter_var($pdf, FILTER_SANITIZE_STRING);
@@ -43,7 +43,7 @@ if(isset($_POST['submit'])){
       $add_paper->execute([$id, $tutor_id, $course, $title, $description, $rename_pdf, $rename_thumb, $status]);
       move_uploaded_file($thumb_tmp_name, $thumb_folder);
       move_uploaded_file($pdf_tmp_name, $pdf_folder);
-      $message[] = 'New course uploaded!';
+      $message[] = 'New paper is uploaded!';
    }
 
    
@@ -112,9 +112,9 @@ if(isset($_POST['submit'])){
          <input type="text" name="title" maxlength="100" required placeholder="Enter paper title" class="box">
          <p>Paper description <span>*</span></p>
          <textarea name="description" class="box" required placeholder="Write description" maxlength="1000" cols="30" rows="10"></textarea>
-         <p>Paper Category <span>*</span></p>
+         <p>Course <span>*</span></p>
          <select name="course" class="box" required>
-            <option value="" disabled selected>--Select Category</option>
+            <option value="" disabled selected>--Select course</option>
 
             <?php
                $select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");

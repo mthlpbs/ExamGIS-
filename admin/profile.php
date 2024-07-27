@@ -9,13 +9,13 @@
       header('location:login.php');
    }
 
-   $select_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
-   $select_playlists->execute([$tutor_id]);
-   $total_playlists = $select_playlists->rowCount();
+   $select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");
+   $select_courses->execute([$tutor_id]);
+   $total_courses = $select_courses->rowCount();
 
-   $select_contents = $conn->prepare("SELECT * FROM `content` WHERE tutor_id = ?");
-   $select_contents->execute([$tutor_id]);
-   $total_contents = $select_contents->rowCount();
+   $select_papers = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ?");
+   $select_papers->execute([$tutor_id]);
+   $total_papers = $select_papers->rowCount();
 
    $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
    $select_likes->execute([$tutor_id]);
@@ -79,54 +79,36 @@
 
    <div class="details">
       <div class="tutor">
-         <img src="../uploaded_files/<?= $fetch_profile['image']; ?>" alt="">
+         <img src="../uploaded_files/tutor_thumb/<?= $fetch_profile['image']; ?>" alt="">
          <h3><?= $fetch_profile['name']; ?></h3>
          <span><?= $fetch_profile['profession']; ?></span>
          <a href="update.php" class="inline-btn">Update Profile</a>
       </div>
       <div class="flex">
          <div class="box">
-            <span><?= $total_playlists; ?></span>
-            <p>total playlists</p>
-            <a href="playlists.php" class="btn">View Categorys</a>
+            <span><?= $total_courses; ?></span>
+            <p>total courses</p>
+            <a href="playlists.php" class="btn">View courses</a>
          </div>
          <div class="box">
-            <span><?= $total_contents; ?></span>
-            <p>total videos</p>
+            <span><?= $total_papers; ?></span>
+            <p>total papers</p>
             <a href="contents.php" class="btn">View papers</a>
          </div>
          <div class="box">
             <span><?= $total_likes; ?></span>
             <p>total likes</p>
-            <a href="contents.php" class="btn">View Papers</a>
+            <a href="contents.php" class="btn">View liked papers</a>
          </div>
          <div class="box">
             <span><?= $total_comments; ?></span>
             <p>total comments</p>
-            <a href="comments.php" class="btn">view comments</a>
+            <a href="comments.php" class="btn">View comments</a>
          </div>
       </div>
    </div>
 
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php include '../components/footer.php'; ?>
-
 <script src="../js/admin_script.js"></script>
-
 </body>
 </html>

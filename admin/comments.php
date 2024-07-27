@@ -87,9 +87,9 @@ if(isset($_POST['delete_comment'])){
          $select_comments->execute([$tutor_id]);
          if($select_comments->rowCount() > 0){
             while($fetch_comment = $select_comments->fetch(PDO::FETCH_ASSOC)){
-               $select_paper = $conn->prepare("SELECT * FROM `content` WHERE id = ?");
-               $select_paper->execute([$fetch_comment['content_id']]);
-               $fetch_paper = $select_content->fetch(PDO::FETCH_ASSOC);
+               $select_paper = $conn->prepare("SELECT * FROM `paper` WHERE id = ?");
+               $select_paper->execute([$fetch_comment['paper_id']]);
+               $fetch_paper = $select_paper->fetch(PDO::FETCH_ASSOC);
       ?>
       <div class="box" style="<?php if($fetch_comment['tutor_id'] == $tutor_id){echo 'order:-1;';} ?>">
          <div class="content"><span><?= $fetch_comment['date']; ?></span><p> - <?= $fetch_paper['title']; ?> - </p><a href="view_content.php?get_id=<?= $fetch_paper['id']; ?>">View paper</a></div>
@@ -108,21 +108,6 @@ if(isset($_POST['delete_comment'])){
       </div>
    
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php include '../components/footer.php'; ?>
 
 <script src="../js/admin_script.js"></script>
 

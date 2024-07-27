@@ -127,9 +127,9 @@ if(isset($_POST['delete'])){
          if($select_playlist->rowCount() > 0){
          while($fetch_playlist = $select_playlist->fetch(PDO::FETCH_ASSOC)){
             $playlist_id = $fetch_playlist['id'];
-            $count_videos = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ?");
-            $count_videos->execute([$playlist_id]);
-            $total_videos = $count_videos->rowCount();
+            $count_pdfs = $conn->prepare("SELECT * FROM `paper` WHERE playlist_id = ?");
+            $count_pdfs->execute([$playlist_id]);
+            $total_pdfs = $count_pdfs->rowCount();
       ?>
    <form action="" method="post" enctype="multipart/form-data">
       <input type="hidden" name="old_image" value="<?= $fetch_playlist['thumb']; ?>">
@@ -145,7 +145,7 @@ if(isset($_POST['delete'])){
       <textarea name="description" class="box" required placeholder="write description" maxlength="1000" cols="30" rows="10"><?= $fetch_playlist['description']; ?></textarea>
       <p>Category thumbnail <span>*</span></p>
       <div class="thumb">
-         <span><?= $total_videos; ?></span>
+         <span><?= $total_pdfs; ?></span>
          <img src="../uploaded_files/<?= $fetch_playlist['thumb']; ?>" alt="">
       </div>
       <input type="file" name="image" accept="image/*" class="box">

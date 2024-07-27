@@ -30,29 +30,29 @@ if(isset($_POST['delete_playlist'])){
    header('locatin:playlists.php');
 }
 
-if(isset($_POST['delete_video'])){
-   $delete_id = $_POST['video_id'];
+if(isset($_POST['delete_pdf'])){
+   $delete_id = $_POST['pdf_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
-   $verify_video = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-   $verify_video->execute([$delete_id]);
-   if($verify_video->rowCount() > 0){
-      $delete_video_thumb = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-      $delete_video_thumb->execute([$delete_id]);
-      $fetch_thumb = $delete_video_thumb->fetch(PDO::FETCH_ASSOC);
+   $verify_pdf = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+   $verify_pdf->execute([$delete_id]);
+   if($verify_pdf->rowCount() > 0){
+      $delete_pdf_thumb = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+      $delete_pdf_thumb->execute([$delete_id]);
+      $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
       unlink('../uploaded_files/'.$fetch_thumb['thumb']);
-      $delete_video = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-      $delete_video->execute([$delete_id]);
-      $fetch_video = $delete_video->fetch(PDO::FETCH_ASSOC);
-      unlink('../uploaded_files/'.$fetch_video['video']);
-      $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE content_id = ?");
+      $delete_pdf = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+      $delete_pdf->execute([$delete_id]);
+      $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
+      unlink('../uploaded_files/'.$fetch_pdf['pdf']);
+      $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
       $delete_likes->execute([$delete_id]);
-      $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE content_id = ?");
+      $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE paper_id = ?");
       $delete_comments->execute([$delete_id]);
-      $delete_content = $conn->prepare("DELETE FROM `content` WHERE id = ?");
-      $delete_content->execute([$delete_id]);
-      $message[] = 'video deleted!';
+      $delete_paper = $conn->prepare("DELETE FROM `paper` WHERE id = ?");
+      $delete_paper->execute([$delete_id]);
+      $message[] = 'The paper is deleted!';
    }else{
-      $message[] = 'video already deleted!';
+      $message[] = 'The paper is already deleted!';
    }
 
 }
@@ -116,13 +116,13 @@ if(isset($_POST['delete_video'])){
       if($select_playlist->rowCount() > 0){
          while($fetch_playlist = $select_playlist->fetch(PDO::FETCH_ASSOC)){
             $playlist_id = $fetch_playlist['id'];
-            $count_videos = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ?");
-            $count_videos->execute([$playlist_id]);
-            $total_videos = $count_videos->rowCount();
+            $count_pdfs = $conn->prepare("SELECT * FROM `paper` WHERE playlist_id = ?");
+            $count_pdfs->execute([$playlist_id]);
+            $total_pdfs = $count_pdfs->rowCount();
    ?>
    <div class="row">
       <div class="thumb">
-         <span><?= $total_videos; ?></span>
+         <span><?= $total_pdfs; ?></span>
          <img src="../uploaded_files/<?= $fetch_playlist['thumb']; ?>" alt="">
       </div>
       <div class="details">
@@ -152,30 +152,30 @@ if(isset($_POST['delete_video'])){
    <div class="box-container">
 
    <?php
-      $select_videos = $conn->prepare("SELECT * FROM `content` WHERE tutor_id = ? AND playlist_id = ?");
-      $select_videos->execute([$tutor_id, $playlist_id]);
-      if($select_videos->rowCount() > 0){
-         while($fecth_videos = $select_videos->fetch(PDO::FETCH_ASSOC)){ 
-            $video_id = $fecth_videos['id'];
+      $select_pdfs = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ? AND playlist_id = ?");
+      $select_pdfs->execute([$tutor_id, $playlist_id]);
+      if($select_pdfs->rowCount() > 0){
+         while($fecth_pdfs = $select_pdfs->fetch(PDO::FETCH_ASSOC)){ 
+            $pdf_id = $fecth_pdfos['id'];
    ?>
       <div class="box">
          <div class="flex">
-            <div><i class="fas fa-dot-circle" style="<?php if($fecth_videos['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fecth_videos['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fecth_videos['status']; ?></span></div>
-            <div><i class="fas fa-calendar"></i><span><?= $fecth_videos['date']; ?></span></div>
+            <div><i class="fas fa-dot-circle" style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fecth_pdfs['status']; ?></span></div>
+            <div><i class="fas fa-calendar"></i><span><?= $fecth_pdfs['date']; ?></span></div>
          </div>
-         <img src="../uploaded_files/<?= $fecth_videos['thumb']; ?>" class="thumb" alt="">
-         <h3 class="title"><?= $fecth_videos['title']; ?></h3>
+         <img src="../uploaded_files/<?= $fecth_pdfs['thumb']; ?>" class="thumb" alt="">
+         <h3 class="title"><?= $fecth_pdfs['title']; ?></h3>
          <form action="" method="post" class="flex-btn">
-            <input type="hidden" name="video_id" value="<?= $video_id; ?>">
-            <a href="update_content.php?get_id=<?= $video_id; ?>" class="option-btn">update</a>
-            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this video?');" name="delete_video">
+            <input type="hidden" name="pdf_id" value="<?= $pdf_id; ?>">
+            <a href="update_content.php?get_id=<?= $pdf_id; ?>" class="option-btn">update</a>
+            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this paper?');" name="delete_pdf">
          </form>
-         <a href="view_content.php?get_id=<?= $video_id; ?>" class="btn">Open Paper</a>
+         <a href="view_content.php?get_id=<?= $pdf_id; ?>" class="btn">Open Paper</a>
       </div>
    <?php
          }
       }else{
-         echo '<p class="empty">no videos added yet! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add videos</a></p>';
+         echo '<p class="empty">no papers added yet! <a href="add_content.php" class="btn" style="margin-top: 1.5rem;">add papers</a></p>';
       }
    ?>
 

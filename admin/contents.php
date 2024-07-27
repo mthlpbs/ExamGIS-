@@ -22,7 +22,7 @@ if(isset($_POST['delete_pdf'])){
       $delete_pdf = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
       $delete_pdf->execute([$delete_id]);
       $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
-      unlink('../uploaded_files/papers/'.$fetch_video['pdf']);
+      unlink('../uploaded_files/papers/'.$fetch_pdf['pdf']);
       $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
       $delete_likes->execute([$delete_id]);
       $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE paper_id = ?");
