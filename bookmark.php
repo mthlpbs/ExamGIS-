@@ -69,8 +69,8 @@ if(isset($_COOKIE['user_id'])){
          $select_bookmark->execute([$user_id]);
          if($select_bookmark->rowCount() > 0){
             while($fetch_bookmark = $select_bookmark->fetch(PDO::FETCH_ASSOC)){
-               $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE id = ? AND status = ? ORDER BY date DESC");
-               $select_courses->execute([$fetch_bookmark['playlist_id'], 'active']);
+               $select_courses = $conn->prepare("SELECT * FROM `course` WHERE id = ? AND status = ? ORDER BY date DESC");
+               $select_courses->execute([$fetch_bookmark['course_id'], 'active']);
                if($select_courses->rowCount() > 0){
                   while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
 
@@ -82,24 +82,24 @@ if(isset($_COOKIE['user_id'])){
       ?>
       <div class="box">
          <div class="tutor">
-            <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="">
+            <img src="uploaded_files/tutor_thumb/<?= $fetch_tutor['image']; ?>" alt="">
             <div>
                <h3><?= $fetch_tutor['name']; ?></h3>
                <span><?= $fetch_course['date']; ?></span>
             </div>
          </div>
-         <img src="uploaded_files/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
+         <img src="uploaded_files/course_thumb/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
          <h3 class="title"><?= $fetch_course['title']; ?></h3>
          <a href="course_desc.php?get_id=<?= $course_id; ?>" class="inline-btn">View course</a>
       </div>
       <?php
                }
             }else{
-               echo '<p class="empty">no courses found!</p>';
+               echo '<p class="empty">No courses are found!</p>';
             }
          }
       }else{
-         echo '<p class="empty">nothing bookmarked yet!</p>';
+         echo '<p class="empty">Nothing bookmarked yet!</p>';
       }
       ?>
 
@@ -107,7 +107,7 @@ if(isset($_COOKIE['user_id'])){
 
 </section>
 
-
+ 
 
 
 

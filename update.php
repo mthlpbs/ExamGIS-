@@ -8,7 +8,7 @@ if(isset($_COOKIE['user_id'])){
    $user_id = '';
    header('Location: login.php');
    exit();
-}
+} 
 
 if(isset($_POST['submit'])){
 

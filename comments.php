@@ -21,9 +21,9 @@ if(isset($_POST['delete_comment'])){
    if($verify_comment->rowCount() > 0){
       $delete_comment = $conn->prepare("DELETE FROM `comments` WHERE id = ?");
       $delete_comment->execute([$delete_id]);
-      $message[] = 'comment deleted successfully!';
+      $message[] = 'Comment is deleted successfully!';
    }else{
-      $message[] = 'comment already deleted!';
+      $message[] = 'Comment is already deleted!';
    }
 
 }
@@ -39,11 +39,11 @@ if(isset($_POST['update_now'])){
    $verify_comment->execute([$update_id, $update_box]);
 
    if($verify_comment->rowCount() > 0){
-      $message[] = 'comment already added!';
+      $message[] = 'Comment is already added!';
    }else{
       $update_comment = $conn->prepare("UPDATE `comments` SET comment = ? WHERE id = ?");
       $update_comment->execute([$update_box, $update_id]);
-      $message[] = 'comment edited successfully!';
+      $message[] = 'Comment is edited successfully!';
    }
 
 }
@@ -118,7 +118,7 @@ if(isset($_POST['update_now'])){
 </section>
 <?php
    }else{
-      $message[] = 'comment was not found!';
+      $message[] = 'Comment was not found!';
    }
 }
 ?>
@@ -134,12 +134,12 @@ if(isset($_POST['update_now'])){
          $select_comments->execute([$user_id]);
          if($select_comments->rowCount() > 0){
             while($fetch_comment = $select_comments->fetch(PDO::FETCH_ASSOC)){
-               $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ?");
-               $select_content->execute([$fetch_comment['content_id']]);
-               $fetch_content = $select_content->fetch(PDO::FETCH_ASSOC);
+               $select_paper = $conn->prepare("SELECT * FROM `paper` WHERE id = ?");
+               $select_paper->execute([$fetch_comment['paper_id']]);
+               $fetch_paper = $select_paper->fetch(PDO::FETCH_ASSOC);
       ?>
       <div class="box" style="<?php if($fetch_comment['user_id'] == $user_id){echo 'order:-1;';} ?>">
-         <div class="content"><span><?= $fetch_comment['date']; ?></span><p> - <?= $fetch_content['title']; ?> - </p><a href="view_pdf.php?get_id=<?= $fetch_content['id']; ?>">view content</a></div>
+         <div class="content"><span><?= $fetch_comment['date']; ?></span><p> - <?= $fetch_paper['title']; ?> - </p><a href="view_pdf.php?get_id=<?= $fetch_paper['id']; ?>">view paper</a></div>
          <p class="text"><?= $fetch_comment['comment']; ?></p>
          <?php
             if($fetch_comment['user_id'] == $user_id){ 

@@ -102,8 +102,8 @@ if(isset($_POST['tutor_fetch'])){
          <span><?= $fetch_tutor['profession']; ?></span>
       </div>
       <div class="flex">
-         <p>total playlists : <span><?= $total_playlists; ?></span></p>
-         <p>total uploads : <span><?= $total_contents; ?></span></p>
+         <p>total courses : <span><?= $total_courses; ?></span></p>
+         <p>total uploads : <span><?= $total_papers; ?></span></p>
          <p>total likes : <span><?= $total_likes; ?></span></p>
          <p>total comments : <span><?= $total_comments; ?></span></p>
       </div>
@@ -114,7 +114,7 @@ if(isset($_POST['tutor_fetch'])){
 <!-- teachers profile section ends -->
 
 <section class="courses">
-
+ 
    <h1 class="heading">latest courese</h1>
 
    <div class="box-container">
@@ -140,7 +140,7 @@ if(isset($_POST['tutor_fetch'])){
          </div>
          <img src="uploaded_files/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
          <h3 class="title"><?= $fetch_course['title']; ?></h3>
-         <a href="course_desc.php?get_id=<?= $course_id; ?>" class="inline-btn">view playlist</a>
+         <a href="course_desc.php?get_id=<?= $course_id; ?>" class="inline-btn">view course</a>
       </div>
       <?php
          }

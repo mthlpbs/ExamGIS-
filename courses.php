@@ -67,7 +67,7 @@ if(isset($_COOKIE['user_id'])){
    <div class="box-container">
 
       <?php
-         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? ORDER BY date DESC");
+         $select_courses = $conn->prepare("SELECT * FROM `course` WHERE status = ? ORDER BY date DESC");
          $select_courses->execute(['active']);
          if($select_courses->rowCount() > 0){
             while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
@@ -79,13 +79,13 @@ if(isset($_COOKIE['user_id'])){
       ?>
       <div class="box">
          <div class="tutor">
-            <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="">
+            <img src="uploaded_files/tutor_thumb/<?= $fetch_tutor['image']; ?>" alt="">
             <div>
                <h3><?= $fetch_tutor['name']; ?></h3>
                <span><?= $fetch_course['date']; ?></span>
             </div>
          </div>
-         <img src="uploaded_files/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
+         <img src="uploaded_files/course_thumb/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
          <h3 class="title"><?= $fetch_course['title']; ?></h3>
          <a href="course_desc.php?get_id=<?= $course_id; ?>" class="inline-btn">view course</a>
       </div>
@@ -103,18 +103,8 @@ if(isset($_COOKIE['user_id'])){
 <!-- courses section ends -->
 
 
-
-
-
-
-
-
-
-
-
-
 <!-- custom js file link  -->
 <script src="js/script.js"></script>
-   
+    
 </body>
 </html>

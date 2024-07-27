@@ -91,7 +91,7 @@ if(isset($_COOKIE['user_id'])){
 
                $count_papers = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ?");
                $count_papers->execute([$tutor_id]);
-               $total_papers = $count_contents->rowCount();
+               $total_papers = $count_papers->rowCount();
 
                $count_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
                $count_likes->execute([$tutor_id]);
@@ -109,8 +109,8 @@ if(isset($_COOKIE['user_id'])){
                <span><?= $fetch_tutor['profession']; ?></span>
             </div>
          </div>
-         <p>playlists : <span><?= $total_playlists; ?></span></p>
-         <p>total uploads : <span><?= $total_contents ?></span></p>
+         <p>total courses : <span><?= $total_courses; ?></span></p>
+         <p>total uploads : <span><?= $total_papers ?></span></p>
          <p>total likes : <span><?= $total_likes ?></span></p>
          <p>total comments : <span><?= $total_comments ?></span></p>
          <form action="tutor_profile.php" method="post">
@@ -134,6 +134,6 @@ if(isset($_COOKIE['user_id'])){
 
 <!-- custom js file link  -->
 <script src="js/script.js"></script>
-   
+    
 </body>
 </html>

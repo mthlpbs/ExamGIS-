@@ -22,7 +22,7 @@ $select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
 $select_bookmark->execute([$user_id]);
 $total_bookmarked = $select_bookmark->rowCount();
 
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">

@@ -11,7 +11,7 @@ if(isset($_COOKIE['user_id'])){
 }
 
 if(isset($_POST['remove'])){
-
+ 
    if($user_id != ''){
       $paper_id = $_POST['paper_id'];
       $paper_id = filter_var($paper_id, FILTER_SANITIZE_STRING);
@@ -36,7 +36,8 @@ if(isset($_POST['remove'])){
 <html lang="en">
 <head>
    <!-- primary meta data-->
-   <meta http-equiv="Content-Type" charset="UTF-8">
+   <meta http-equiv="
+   -Type" charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="keywords" content="Login,Log in,Signin,Sign in" lang="en">

@@ -68,7 +68,7 @@ if(isset($_COOKIE['user_id'])){
    </form>
 
    <div class="box-container">
-
+ 
       <?php
          if(isset($_POST['search_tutor']) or isset($_POST['search_tutor_btn'])){
             $search_tutor = $_POST['search_tutor'];
@@ -103,8 +103,8 @@ if(isset($_COOKIE['user_id'])){
                <span><?= $fetch_tutor['profession']; ?></span>
             </div>
          </div>
-         <p>playlists : <span><?= $total_playlists; ?></span></p>
-         <p>total papers : <span><?= $total_contents ?></span></p>
+         <p>total courses : <span><?= $total_courses; ?></span></p>
+         <p>total papers : <span><?= $total_papers ?></span></p>
          <p>total likes : <span><?= $total_likes ?></span></p>
          <p>total comments : <span><?= $total_comments ?></span></p>
          <form action="tutor_profile.php" method="post">

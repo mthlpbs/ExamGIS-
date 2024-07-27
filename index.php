@@ -125,7 +125,7 @@ $total_bookmarked = $select_bookmark->rowCount();
    <div class="box-container">
 
       <?php
-         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? ORDER BY date DESC LIMIT 6");
+         $select_courses = $conn->prepare("SELECT * FROM `course` WHERE status = ? ORDER BY date DESC LIMIT 6");
          $select_courses->execute(['active']);
          if($select_courses->rowCount() > 0){
             while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
@@ -137,25 +137,25 @@ $total_bookmarked = $select_bookmark->rowCount();
       ?>
       <div class="box">
          <div class="tutor">
-            <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="">
+            <img src="uploaded_files/tutor_thumb/<?= $fetch_tutor['image']; ?>" alt="">
             <div>
                <h3><?= $fetch_tutor['name']; ?></h3>
                <span><?= $fetch_course['date']; ?></span>
             </div>
          </div>
-         <img src="uploaded_files/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
+         <img src="uploaded_files/course_thumb/<?= $fetch_course['thumb']; ?>" class="thumb" alt="">
          <h3 class="title"><?= $fetch_course['title']; ?></h3>
          <a href="course_desc.php?get_id=<?= $course_id; ?>" class="inline-btn">view course</a>
       </div>
       <?php
          }
       }else{
-         echo '<p class="empty">no courses added yet!</p>';
+         echo '<p class="empty">No courses are added yet!</p>';
       }
       ?>
 
    </div>
-
+ 
    <div class="more-btn">
       <a href="courses.php" class="inline-option-btn">view more</a>
    </div>

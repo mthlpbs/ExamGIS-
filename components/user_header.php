@@ -36,15 +36,15 @@ if(isset($message)){
             if($select_profile->rowCount() > 0){
             $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
          ?>
-         <img src="uploaded_files/<?= $fetch_profile['image']; ?>" alt="">
+         <img src="uploaded_files/user_thumb/<?= $fetch_profile['image']; ?>" alt="">
          <h3><?= $fetch_profile['name']; ?></h3>
          <span>student</span>
          <a href="profile.php" class="btn">user profile</a>
-         <a href="components/user_logout.php" onclick="return confirm('logout from this website?');" class="delete-btn">logout</a>
+         <a href="components/user_logout.php" onclick="return confirm('Do you want to logout from ExamGIS');" class="delete-btn">logout</a>
          <?php
             }else{
          ?>
-         <h3>please login or register</h3>
+         <h3>Please login or register</h3>
           <div class="flex-btn">
             <a href="login.php" class="option-btn">login</a>
             <a href="register.php" class="option-btn">register</a>
@@ -75,7 +75,7 @@ if(isset($message)){
             if($select_profile->rowCount() > 0){
             $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
          ?>
-         <img src="uploaded_files/<?= $fetch_profile['image']; ?>" alt="">
+         <img src="uploaded_files/user_thumb/<?= $fetch_profile['image']; ?>" alt="">
          <h3><?= $fetch_profile['name']; ?></h3>
          <span>student</span>
          <a href="profile.php" class="btn">view profile</a>

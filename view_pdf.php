@@ -9,7 +9,7 @@ if(isset($_COOKIE['user_id'])){
    header('Location: login.php');
    exit();
 }
-
+ 
 if(isset($_GET['get_id'])){
    $get_id = $_GET['get_id'];
 }else{
@@ -17,7 +17,7 @@ if(isset($_GET['get_id'])){
    header('location:home.php');
 }
 
-if(isset($_POST['like_content'])){
+if(isset($_POST['like_paper'])){
 
    if($user_id != ''){
 
@@ -202,14 +202,14 @@ if(isset($_POST['update_now'])){
             $paper_id = $fetch_paper['id'];
 
             $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE paper_id = ?");
-            $select_likes->execute([$content_id]);
+            $select_likes->execute([$paper_id]);
             $total_likes = $select_likes->rowCount();  
 
             $verify_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ? AND paper_id = ?");
             $verify_likes->execute([$user_id, $paper_id]);
 
             $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ? LIMIT 1");
-            $select_tutor->execute([$fetch_content['tutor_id']]);
+            $select_tutor->execute([$fetch_paper['tutor_id']]);
             $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
    ?>
    <div class="pdf-details">
@@ -227,16 +227,16 @@ if(isset($_POST['update_now'])){
          </div>
       </div>
       <form action="" method="post" class="flex">
-         <input type="hidden" name="content_id" value="<?= $content_id; ?>">
-         <a href="course_desc.php?get_id=<?= $fetch_content['playlist_id']; ?>" class="inline-btn">view course</a>
+         <input type="hidden" name="paper_id" value="<?= $paper_id; ?>">
+         <a href="course_desc.php?get_id=<?= $fetch_paper['course_id']; ?>" class="inline-btn">view course</a>
          <?php
             if($verify_likes->rowCount() > 0){
          ?>
-         <button type="submit" name="like_content"><i class="fas fa-heart"></i><span>liked</span></button>
+         <button type="submit" name="like_paper"><i class="fas fa-heart"></i><span>liked</span></button>
          <?php
          }else{
          ?>
-         <button type="submit" name="like_content"><i class="far fa-heart"></i><span>like</span></button>
+         <button type="submit" name="like_paper"><i class="far fa-heart"></i><span>like</span></button>
          <?php
             }
          ?>
@@ -261,7 +261,7 @@ if(isset($_POST['update_now'])){
    <h1 class="heading">Write your comment</h1>
 
    <form action="" method="post" class="add-comment">
-      <input type="hidden" name="content_id" value="<?= $get_id; ?>">
+      <input type="hidden" name="paper_id" value="<?= $get_id; ?>">
       <textarea name="comment_box" required placeholder="write your comment..." maxlength="1000" cols="30" rows="10"></textarea>
       <input type="submit" value="add comment" name="add_comment" class="inline-btn">
    </form>

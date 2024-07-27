@@ -129,18 +129,7 @@ if(isset($_POST['submit'])){
 </section>
 
 <!-- contact section ends -->
-
-
-
-
-
-
-
-
-
-
-
-  
+   
 
 <!-- custom js file link  -->
 <script src="js/script.js"></script>
