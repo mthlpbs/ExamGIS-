@@ -97,7 +97,7 @@ if(isset($_POST['delete_course'])){
             <div><i class="fas fa-dot-circle" style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fecth_pdfs['status']; ?></span></div>
             <div><i class="fas fa-calendar"></i><span><?= $fecth_pdfs['date']; ?></span></div>
          </div>
-         <img src="../uploaded_files/paper)thumb/<?= $fecth_pdf['thumb']; ?>" class="thumb" alt="">
+         <img src="../uploaded_files/paper_thumb/<?= $fecth_pdf['thumb']; ?>" class="thumb" alt="">
          <h3 class="title"><?= $fecth_pdfs['title']; ?></h3>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="pdf_id" value="<?= $pdf_id; ?>">
@@ -138,7 +138,7 @@ if(isset($_POST['delete_course'])){
       ?>
       <div class="box">
          <div class="flex">
-            <div><i class="fas fa-circle-dot" style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fetch_playlist['status']; ?></span></div>
+            <div><i class="fas fa-circle-dot" style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fetch_course['status']; ?></span></div>
             <div><i class="fas fa-calendar"></i><span><?= $fetch_course['date']; ?></span></div>
          </div>
          <div class="thumb">

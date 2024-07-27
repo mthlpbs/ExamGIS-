@@ -119,7 +119,7 @@ if(isset($_POST['delete'])){
             <a href="update_playlist.php?get_id=<?= $course_id; ?>" class="option-btn">update</a>
             <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this course?');" name="delete">
          </form>
-         <a href="view_playlist.php?get_id=<?= $course_id; ?>" class="btn">view Category</a>
+         <a href="view_playlist.php?get_id=<?= $course_id; ?>" class="btn">view courses</a>
       </div>
       <?php
          } 

@@ -26,15 +26,15 @@ if(isset($_POST['update'])){
    $title = filter_var($title, FILTER_SANITIZE_STRING);
    $description = $_POST['description'];
    $description = filter_var($description, FILTER_SANITIZE_STRING);
-   $playlist = $_POST['playlist'];
-   $playlist = filter_var($playlist, FILTER_SANITIZE_STRING);
+   $course = $_POST['course'];
+   $course = filter_var($pcours, FILTER_SANITIZE_STRING);
 
    $update_paper = $conn->prepare("UPDATE `paper` SET title = ?, description = ?, status = ? WHERE id = ?");
    $update_paper->execute([$title, $description, $status, $pdf_id]);
 
-   if(!empty($playlist)){
-      $update_playlist = $conn->prepare("UPDATE `paper` SET playlist_id = ? WHERE id = ?");
-      $update_playlist->execute([$playlist, $pdf_id]);
+   if(!empty($course)){
+      $update_course = $conn->prepare("UPDATE `paper` SET course_id = ? WHERE id = ?");
+      $update_course->execute([$course, $pdf_id]);
    }
 
    $old_thumb = $_POST['old_thumb'];
@@ -45,7 +45,7 @@ if(isset($_POST['update'])){
    $rename_thumb = unique_id().'.'.$thumb_ext;
    $thumb_size = $_FILES['thumb']['size'];
    $thumb_tmp_name = $_FILES['thumb']['tmp_name'];
-   $thumb_folder = '../uploaded_files/'.$rename_thumb;
+   $thumb_folder = '../uploaded_files/paper_thumb/'.$rename_thumb;
 
    if(!empty($thumb)){
       if($thumb_size > 2000000){
@@ -55,7 +55,7 @@ if(isset($_POST['update'])){
          $update_thumb->execute([$rename_thumb, $pdf_id]);
          move_uploaded_file($thumb_tmp_name, $thumb_folder);
          if($old_thumb != '' AND $old_thumb != $rename_thumb){
-            unlink('../uploaded_files/'.$old_thumb);
+            unlink('../uploaded_files/paper_thumb/'.$old_thumb);
          }
       }
    }
@@ -67,14 +67,14 @@ if(isset($_POST['update'])){
    $pdf_ext = pathinfo($pdf, PATHINFO_EXTENSION);
    $rename_pdf = unique_id().'.'.$pdf_ext;
    $pdf_tmp_name = $_FILES['pdf']['tmp_name'];
-   $pdf_folder = '../uploaded_files/'.$rename_pdf;
+   $pdf_folder = '../uploaded_files/papers/'.$rename_pdf;
 
    if(!empty($pdf)){
       $update_pdfo = $conn->prepare("UPDATE `paper` SET pdf = ? WHERE id = ?");
       $update_pdf->execute([$rename_pdf, $pdf_id]);
       move_uploaded_file($pdf_tmp_name, $pdf_folder);
       if($old_pdf != '' AND $old_pdf != $rename_pdf){
-         unlink('../uploaded_files/'.$old_pdf);
+         unlink('../uploaded_files/papers/'.$old_pdf);
       }
    }
 
@@ -90,12 +90,12 @@ if(isset($_POST['delete_pdf'])){
    $delete_pdf_thumb = $conn->prepare("SELECT thumb FROM `paper` WHERE id = ? LIMIT 1");
    $delete_pdf_thumb->execute([$delete_id]);
    $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_thumb['thumb']);
+   unlink('../uploaded_files/paper_thumb/'.$fetch_thumb['thumb']);
 
    $delete_pdf = $conn->prepare("SELECT pdf FROM `paper` WHERE id = ? LIMIT 1");
    $delete_pdf->execute([$delete_id]);
    $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_pdf['pdf']);
+   unlink('../uploaded_files/paper_thumb/'.$fetch_pdf['pdf']);
 
    $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
    $delete_likes->execute([$delete_id]);
@@ -181,29 +181,29 @@ if(isset($_POST['delete_pdf'])){
       <input type="text" name="title" maxlength="100" required placeholder="enter pdf title" class="box" value="<?= $fecth_pdfs['title']; ?>">
       <p>update description <span>*</span></p>
       <textarea name="description" class="box" required placeholder="write description" maxlength="1000" cols="30" rows="10"><?= $fecth_pdfs['description']; ?></textarea>
-      <p>update Category</p>
-      <select name="playlist" class="box">
-         <option value="<?= $fecth_pdfs['playlist_id']; ?>" selected>--select Category</option>
+      <p>update course</p>
+      <select name="course" class="box">
+         <option value="<?= $fecth_pdfs['course_id']; ?>" selected>--select couerse</option>
          <?php
-         $select_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
-         $select_playlists->execute([$tutor_id]);
-         if($select_playlists->rowCount() > 0){
-            while($fetch_playlist = $select_playlists->fetch(PDO::FETCH_ASSOC)){
+         $select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");
+         $select_courses->execute([$tutor_id]);
+         if($select_courses->rowCount() > 0){
+            while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
          ?>
-         <option value="<?= $fetch_playlist['id']; ?>"><?= $fetch_playlist['title']; ?></option>
+         <option value="<?= $fetch_course['id']; ?>"><?= $fetch_course['title']; ?></option>
          <?php
             }
          ?>
          <?php
          }else{
-            echo '<option value="" disabled>no playlist created yet!</option>';
+            echo '<option value="" disabled>no course created yet!</option>';
          }
          ?>
       </select>
-      <img src="../uploaded_files/<?= $fecth_pdfs['thumb']; ?>" alt="">
+      <img src="../uploaded_files/paper_thumb/<?= $fecth_pdfs['thumb']; ?>" alt="">
       <p>update Cover</p>
       <input type="file" name="thumb" accept="image/*" class="box">
-      <video src="../uploaded_files/<?= $fecth_pdfs['pdf']; ?>" controls></video>
+      <video src="../uploaded_files/paper_thumb/<?= $fecth_pdfs['pdf']; ?>" controls></video>
       <p>update Paper</p>
       <input type="file" name="pdf" accept="pdf/*" class="box">
       <input type="submit" value="update paper" name="update" class="btn">

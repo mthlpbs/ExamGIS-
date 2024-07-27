@@ -24,12 +24,12 @@ if(isset($_POST['delete_pdf'])){
    $delete_pdf_thumb = $conn->prepare("SELECT thumb FROM `paper` WHERE id = ? LIMIT 1");
    $delete_pdf_thumb->execute([$delete_id]);
    $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_thumb['thumb']);
+   unlink('../uploaded_files/paper_thumb/'.$fetch_thumb['thumb']);
 
    $delete_pdf = $conn->prepare("SELECT pdf FROM `paper` WHERE id = ? LIMIT 1");
    $delete_pdf->execute([$delete_id]);
    $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
-   unlink('../uploaded_files/'.$fetch_pdf['pdf']);
+   unlink('../uploaded_files/papers/'.$fetch_pdf['pdf']);
 
    $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
    $delete_likes->execute([$delete_id]);
@@ -127,7 +127,7 @@ if(isset($_POST['delete_comment'])){
             $total_comments = $count_comments->rowCount();
    ?>
    <div class="container">
-      <video src="../uploaded_files/<?= $fetch_paper['pdf']; ?>" autoplay controls poster="../uploaded_files/<?= $fetch_paper['thumb']; ?>" class="video"></video>
+      <video src="../uploaded_files/papers/<?= $fetch_paper['pdf']; ?>" autoplay controls poster="../uploaded_files/paper_thumb/<?= $fetch_paper['thumb']; ?>" class="video"></video>
       <div class="date"><i class="fas fa-calendar"></i><span><?= $fetch_papert['date']; ?></span></div>
       <h3 class="title"><?= $fetch_papert['title']; ?></h3>
       <div class="flex">
@@ -170,7 +170,7 @@ if(isset($_POST['delete_comment'])){
       ?>
       <div class="box">
          <div class="user">
-            <img src="../uploaded_files/<?= $fetch_commentor['image']; ?>" alt="">
+            <img src="../uploaded_files/user_thumb/<?= $fetch_commentor['image']; ?>" alt="">
             <div>
                <h3><?= $fetch_commentor['name']; ?></h3>
                <span><?= $fetch_comment['date']; ?></span>
