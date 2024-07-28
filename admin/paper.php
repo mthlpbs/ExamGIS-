@@ -1,29 +1,40 @@
 <?php
 
-   include '../components/connect.php';
+include '../components/connect.php';
 
-   if(isset($_COOKIE['tutor_id'])){
-      $tutor_id = $_COOKIE['tutor_id'];
+if(isset($_COOKIE['tutor_id'])){
+   $tutor_id = $_COOKIE['tutor_id'];
+}else{
+   $tutor_id = '';
+   header('location:login.php');
+}
+
+if(isset($_POST['delete_pdf'])){
+   $delete_id = $_POST['pdf_id'];
+   $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
+   $verify_pdf = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+   $verify_pdf->execute([$delete_id]);
+   if($verify_pdf->rowCount() > 0){
+      $delete_pdf_thumb = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+      $delete_pdf_thumb->execute([$delete_id]);
+      $fetch_thumb = $delete_pdf_thumb->fetch(PDO::FETCH_ASSOC);
+      unlink('../uploaded_files/paper_thumb/'.$fetch_thumb['thumb']);
+      $delete_pdf = $conn->prepare("SELECT * FROM `paper` WHERE id = ? LIMIT 1");
+      $delete_pdf->execute([$delete_id]);
+      $fetch_pdf = $delete_pdf->fetch(PDO::FETCH_ASSOC);
+      unlink('../uploaded_files/papers/'.$fetch_pdf['pdf']);
+      $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE paper_id = ?");
+      $delete_likes->execute([$delete_id]);
+      $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE paper_id = ?");
+      $delete_comments->execute([$delete_id]);
+      $delete_paper = $conn->prepare("DELETE FROM `paper` WHERE id = ?");
+      $delete_paper->execute([$delete_id]);
+      $message[] = 'The paper is deleted!';
    }else{
-      $tutor_id = '';
-      header('location:login.php');
+      $message[] = 'This paper is already deleted!';
    }
 
-   $select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");
-   $select_courses->execute([$tutor_id]);
-   $total_courses = $select_courses->rowCount();
-
-   $select_papers = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ?");
-   $select_papers->execute([$tutor_id]);
-   $total_papers = $select_papers->rowCount();
-
-   $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
-   $select_likes->execute([$tutor_id]);
-   $total_likes = $select_likes->rowCount();
-
-   $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
-   $select_comments->execute([$tutor_id]);
-   $total_comments = $select_comments->rowCount();
+}
 
 ?>
 
@@ -42,7 +53,7 @@
    <meta name="owner" content="-">
 
    <!-- meta properties -->
-   <title>Profile - ExamGIS</title>
+   <title>Dashboard - ExamGIS</title>
    <meta name="title" content="ExamGIS: Your Ultimate Study Companion" />
    <meta name="description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey." />
    <meta property="og:type" content="website" />
@@ -73,42 +84,50 @@
 
 <?php include '../components/admin_header.php'; ?>
    
-<section class="tutor-profile" style="min-height: calc(100vh - 19rem);"> 
+<section class="contents">
 
-   <h1 class="heading">Profile Details</h1>
+   <h1 class="heading">your papers</h1>
 
-   <div class="details">
-      <div class="tutor">
-         <img src="../uploaded_files/tutor_thumb/<?= $fetch_profile['image']; ?>" alt="">
-         <h3><?= $fetch_profile['name']; ?></h3>
-         <span><?= $fetch_profile['profession']; ?></span>
-         <a href="update.php" class="inline-btn">Update Profile</a>
+   <div class="box-container">
+
+   <div class="box" style="text-align: center;">
+      <h3 class="title" style="margin-bottom: .5rem;">add new paper</h3>
+      <a href="add_paper.php" class="btn">add paper</a>
+   </div>
+
+   <?php
+      $select_pdfs = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ? ORDER BY date DESC");
+      $select_pdfs->execute([$tutor_id]);
+      if($select_pdfs->rowCount() > 0){
+         while($fecth_pdfs = $select_pdfs->fetch(PDO::FETCH_ASSOC)){ 
+            $pdf_id = $fecth_pdfs['id'];
+   ?>
+      <div class="box">
+         <div class="flex">
+            <div><i class="fas fa-dot-circle" style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fecth_pdfs['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fecth_pdfs['status']; ?></span></div>
+            <div><i class="fas fa-calendar"></i><span><?= $fecth_pdfs['date']; ?></span></div>
+         </div>
+         <img src="../uploaded_files/paper_thumb/<?= $fecth_pdfs['thumb']; ?>" class="thumb" alt="">
+         <h3 class="title"><?= $fecth_pdfs['title']; ?></h3>
+         <form action="" method="post" class="flex-btn">
+            <input type="hidden" name="pdf_id" value="<?= $pdf_id; ?>">
+            <a href="update_paper.php?get_id=<?= $pdf_id; ?>" class="option-btn">update</a>
+            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('Do you want to delete this paper?');" name="delete_pdf">
+         </form>
+         <a href="view_paper.php?get_id=<?= $pdf_id; ?>" class="btn">View paper</a>
       </div>
-      <div class="flex">
-         <div class="box">
-            <span><?= $total_courses; ?></span>
-            <p>total courses</p>
-            <a href="course.php" class="btn">View courses</a>
-         </div>
-         <div class="box">
-            <span><?= $total_papers; ?></span>
-            <p>total papers</p>
-            <a href="paper.php" class="btn">View papers</a>
-         </div>
-         <div class="box">
-            <span><?= $total_likes; ?></span>
-            <p>total likes</p>
-            <a href="paper.php" class="btn">View liked papers</a>
-         </div>
-         <div class="box">
-            <span><?= $total_comments; ?></span>
-            <p>total comments</p>
-            <a href="comments.php" class="btn">View comments</a>
-         </div>
-      </div>
+   <?php
+         }
+      }else{
+         echo '<p class="empty"No papers are added yet!</p>';
+      }
+   ?>
+
    </div>
 
 </section>
+
 <script src="../js/admin_script.js"></script>
+
 </body>
 </html>

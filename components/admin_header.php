@@ -94,8 +94,8 @@ if(isset($message)){
 
    <nav class="navbar">
       <a href="dashboard.php"><i class="fas fa-home"></i><span>Home</span></a>
-      <a href="playlists.php"><i class="fa-solid fa-bars-staggered"></i><span>Courses</span></a>
-      <a href="contents.php"><i class="fas fa-graduation-cap"></i><span>Papers</span></a>
+      <a href="course.php"><i class="fa-solid fa-bars-staggered"></i><span>Courses</span></a>
+      <a href="paper.php"><i class="fas fa-graduation-cap"></i><span>Papers</span></a>
       <a href="comments.php"><i class="fas fa-comment"></i><span>Comments</span></a>
       <a href="../components/admin_logout.php" onclick="return confirm('Do you want to logout from ExamGIS?');"><i class="fas fa-right-from-bracket"></i><span>Logout</span></a>
    </nav>

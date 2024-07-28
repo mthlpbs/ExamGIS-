@@ -1,29 +1,40 @@
 <?php
 
-   include '../components/connect.php';
+include '../components/connect.php';
 
-   if(isset($_COOKIE['tutor_id'])){
-      $tutor_id = $_COOKIE['tutor_id'];
-   }else{
-      $tutor_id = '';
-      header('location:login.php');
-   }
+if(isset($_COOKIE['tutor_id'])){
+   $tutor_id = $_COOKIE['tutor_id'];
+}else{
+   $tutor_id = '';
+   header('location:login.php');
+}
 
-   $select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");
-   $select_courses->execute([$tutor_id]);
-   $total_courses = $select_courses->rowCount();
+if(isset($_POST['submit'])){
 
-   $select_papers = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ?");
-   $select_papers->execute([$tutor_id]);
-   $total_papers = $select_papers->rowCount();
+   $id = unique_id();
+   $title = $_POST['title'];
+   $title = filter_var($title, FILTER_SANITIZE_STRING);
+   $description = $_POST['description'];
+   $description = filter_var($description, FILTER_SANITIZE_STRING);
+   $status = $_POST['status'];
+   $status = filter_var($status, FILTER_SANITIZE_STRING);
 
-   $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
-   $select_likes->execute([$tutor_id]);
-   $total_likes = $select_likes->rowCount();
+   $image = $_FILES['image']['name'];
+   $image = filter_var($image, FILTER_SANITIZE_STRING);
+   $ext = pathinfo($image, PATHINFO_EXTENSION);
+   $rename = unique_id().'.'.$ext;
+   $image_size = $_FILES['image']['size'];
+   $image_tmp_name = $_FILES['image']['tmp_name'];
+   $image_folder = '../uploaded_files/course_thumb/'.$rename;
 
-   $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
-   $select_comments->execute([$tutor_id]);
-   $total_comments = $select_comments->rowCount();
+   $add_course = $conn->prepare("INSERT INTO `course`(id, tutor_id, title, description, thumb, status) VALUES(?,?,?,?,?,?)");
+   $add_course->execute([$id, $tutor_id, $title, $description, $rename, $status]);
+
+   move_uploaded_file($image_tmp_name, $image_folder);
+
+   $message[] = 'New course is added!';  
+
+}
 
 ?>
 
@@ -42,7 +53,7 @@
    <meta name="owner" content="-">
 
    <!-- meta properties -->
-   <title>Profile - ExamGIS</title>
+   <title>Add Paper Category - ExamGIS</title>
    <meta name="title" content="ExamGIS: Your Ultimate Study Companion" />
    <meta name="description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey." />
    <meta property="og:type" content="website" />
@@ -73,42 +84,30 @@
 
 <?php include '../components/admin_header.php'; ?>
    
-<section class="tutor-profile" style="min-height: calc(100vh - 19rem);"> 
+<section class="course-form">
 
-   <h1 class="heading">Profile Details</h1>
+   <h1 class="heading">Create course/h1>
 
-   <div class="details">
-      <div class="tutor">
-         <img src="../uploaded_files/tutor_thumb/<?= $fetch_profile['image']; ?>" alt="">
-         <h3><?= $fetch_profile['name']; ?></h3>
-         <span><?= $fetch_profile['profession']; ?></span>
-         <a href="update.php" class="inline-btn">Update Profile</a>
-      </div>
-      <div class="flex">
-         <div class="box">
-            <span><?= $total_courses; ?></span>
-            <p>total courses</p>
-            <a href="course.php" class="btn">View courses</a>
-         </div>
-         <div class="box">
-            <span><?= $total_papers; ?></span>
-            <p>total papers</p>
-            <a href="paper.php" class="btn">View papers</a>
-         </div>
-         <div class="box">
-            <span><?= $total_likes; ?></span>
-            <p>total likes</p>
-            <a href="paper.php" class="btn">View liked papers</a>
-         </div>
-         <div class="box">
-            <span><?= $total_comments; ?></span>
-            <p>total comments</p>
-            <a href="comments.php" class="btn">View comments</a>
-         </div>
-      </div>
-   </div>
+   <form action="" method="post" enctype="multipart/form-data">
+      <p>Course status <span>*</span></p>
+      <select name="status" class="box" required>
+         <option value="" selected disabled>-- select status</option>
+         <option value="active">active</option>
+         <option value="deactive">deactive</option>
+      </select>
+      <p>Course title <span>*</span></p>
+      <input type="text" name="title" maxlength="100" required placeholder="Enter course name" class="box">
+      <p>Course description <span>*</span></p>
+      <textarea name="description" class="box" required placeholder="Write description" maxlength="1000" cols="30" rows="10"></textarea>
+      <p>Course cover <span>*</span></p>
+      <input type="file" name="image" accept="image/*" required class="box">
+      <input type="submit" value="create course" name="submit" class="btn">
+   </form>
 
 </section>
+
+
 <script src="../js/admin_script.js"></script>
+
 </body>
 </html>

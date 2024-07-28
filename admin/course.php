@@ -9,21 +9,30 @@ if(isset($_COOKIE['tutor_id'])){
    header('location:login.php');
 }
 
-$select_papers = $conn->prepare("SELECT * FROM `paper` WHERE tutor_id = ?");
-$select_papers->execute([$tutor_id]);
-$total_papers = $select_papers->rowCount();
+if(isset($_POST['delete'])){
+   $delete_id = $_POST['course_id'];
+   $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
 
-$select_courses = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ?");
-$select_courses->execute([$tutor_id]);
-$total_courses = $select_courses->rowCount();
+   $verify_course = $conn->prepare("SELECT * FROM `course` WHERE id = ? AND tutor_id = ? LIMIT 1");
+   $verify_course->execute([$delete_id, $tutor_id]);
 
-$select_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
-$select_likes->execute([$tutor_id]);
-$total_likes = $select_likes->rowCount();
+   if($verify_course->rowCount() > 0){
 
-$select_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
-$select_comments->execute([$tutor_id]);
-$total_comments = $select_comments->rowCount();
+   
+
+   $delete_course_thumb = $conn->prepare("SELECT * FROM `course` WHERE id = ? LIMIT 1");
+   $delete_course_thumb->execute([$delete_id]);
+   $fetch_thumb = $delete_course_thumb->fetch(PDO::FETCH_ASSOC);
+   unlink('../uploaded_files/course_thumb/'.$fetch_thumb['thumb']);
+   $delete_bookmark = $conn->prepare("DELETE FROM `bookmark` WHERE course_id = ?");
+   $delete_bookmark->execute([$delete_id]);
+   $delete_course = $conn->prepare("DELETE FROM `course` WHERE id = ?");
+   $delete_course->execute([$delete_id]);
+   $message[] = 'course deleted!';
+   }else{
+      $message[] = 'course already deleted!';
+   }
+}
 
 ?>
 
@@ -42,7 +51,7 @@ $total_comments = $select_comments->rowCount();
    <meta name="owner" content="-">
 
    <!-- meta properties -->
-   <title>Dashboard - ExamGIS</title>
+   <title>course | ExamGIS</title>
    <meta name="title" content="ExamGIS: Your Ultimate Study Companion" />
    <meta name="description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey." />
    <meta property="og:type" content="website" />
@@ -72,48 +81,65 @@ $total_comments = $select_comments->rowCount();
 <body>
 
 <?php include '../components/admin_header.php'; ?>
-   
-<section class="dashboard">
 
-   <h1 class="heading">dashboard</h1>
+<section class="courses">
+
+   <h1 class="heading">Added a course</h1>
 
    <div class="box-container">
-
-      <div class="box">
-         <h3>Welcome!</h3>
-         <p><?= $fetch_profile['name']; ?></p>
-         <a href="profile.php" class="btn">view Profile</a>
+   
+      <div class="box" style="text-align: center;">
+         <h3 class="title" style="margin-bottom: .5rem;">Add a new course</h3>
+         <a href="add_course.php" class="btn">Add course</a>
       </div>
 
+      <?php
+         $select_course = $conn->prepare("SELECT * FROM `course` WHERE tutor_id = ? ORDER BY date DESC");
+         $select_course->execute([$tutor_id]);
+         if($select_course->rowCount() > 0){
+         while($fetch_course = $select_course->fetch(PDO::FETCH_ASSOC)){
+            $course_id = $fetch_course['id'];
+            $count_papers = $conn->prepare("SELECT * FROM `paper` WHERE course_id = ?");
+            $count_papers->execute([$course_id]);
+            $total_papers = $count_papers->rowCount();
+      ?>
       <div class="box">
-         <h3><?= $total_papers; ?></h3>
-         <p>total papers</p>
-         <a href="add_paper.php" class="btn">add a new paper</a>
+         <div class="flex">
+            <div><i class="fas fa-circle-dot" style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"></i><span style="<?php if($fetch_course['status'] == 'active'){echo 'color:limegreen'; }else{echo 'color:red';} ?>"><?= $fetch_course['status']; ?></span></div>
+            <div><i class="fas fa-calendar"></i><span><?= $fetch_course['date']; ?></span></div>
+         </div>
+         <div class="thumb">
+            <span><?= $total_papers; ?></span>
+            <img src="../uploaded_files/course_thumb/<?= $fetch_course['thumb']; ?>" alt="">
+         </div>
+         <h3 class="title"><?= $fetch_course['title']; ?></h3>
+         <p class="description"><?= $fetch_course['description']; ?></p>
+         <form action="" method="post" class="flex-btn">
+            <input type="hidden" name="course_id" value="<?= $course_id; ?>">
+            <a href="update_course.php?get_id=<?= $course_id; ?>" class="option-btn">update</a>
+            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this course?');" name="delete">
+         </form>
+         <a href="view_course.php?get_id=<?= $course_id; ?>" class="btn">view courses</a>
       </div>
-
-      <div class="box">
-         <h3><?= $total_courses; ?></h3>
-         <p>total courses</p>
-         <a href="add_course.php" class="btn">add a new course</a>
-      </div>
-
-      <div class="box">
-         <h3><?= $total_likes; ?></h3>
-         <p>total likes</p>
-         <a href="paper.php" class="btn">view papers</a>
-      </div>
-
-      <div class="box">
-         <h3><?= $total_comments; ?></h3>
-         <p>total comments</p>
-         <a href="comments.php" class="btn">view comments</a>
-      </div>
+      <?php
+         } 
+      }else{
+         echo '<p class="empty">No course added yet!</p>';
+      }
+      ?>
 
    </div>
 
 </section>
 
+
 <script src="../js/admin_script.js"></script>
+
+<script>
+   document.querySelectorAll('.courses .box-container .box .description').forEach(content => {
+      if(content.innerHTML.length > 100) content.innerHTML = content.innerHTML.slice(0, 100);
+   });
+</script>
 
 </body>
 </html>

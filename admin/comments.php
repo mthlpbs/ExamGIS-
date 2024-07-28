@@ -92,7 +92,7 @@ if(isset($_POST['delete_comment'])){
                $fetch_paper = $select_paper->fetch(PDO::FETCH_ASSOC);
       ?>
       <div class="box" style="<?php if($fetch_comment['tutor_id'] == $tutor_id){echo 'order:-1;';} ?>">
-         <div class="content"><span><?= $fetch_comment['date']; ?></span><p> - <?= $fetch_paper['title']; ?> - </p><a href="view_content.php?get_id=<?= $fetch_paper['id']; ?>">View paper</a></div>
+         <div class="content"><span><?= $fetch_comment['date']; ?></span><p> - <?= $fetch_paper['title']; ?> - </p><a href="view_paper.php?get_id=<?= $fetch_paper['id']; ?>">View paper</a></div>
          <p class="text"><?= $fetch_comment['comment']; ?></p>
          <form action="" method="post">
             <input type="hidden" name="comment_id" value="<?= $fetch_comment['id']; ?>">

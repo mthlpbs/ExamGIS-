@@ -101,10 +101,10 @@ if(isset($_POST['delete_course'])){
          <h3 class="title"><?= $fecth_pdfs['title']; ?></h3>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="pdf_id" value="<?= $pdf_id; ?>">
-            <a href="update_content.php?get_id=<?= $pdf_id; ?>" class="option-btn">update</a>
+            <a href="update_paper.php?get_id=<?= $pdf_id; ?>" class="option-btn">update</a>
             <input type="submit" value="delete" class="delete-btn" onclick="return confirm('Delete this paper?');" name="delete_pdf">
          </form>
-         <a href="view_content.php?get_id=<?= $pdf_id; ?>" class="btn">view paper</a>
+         <a href="view_paper.php?get_id=<?= $pdf_id; ?>" class="btn">view paper</a>
       </div>
    <?php
          }
@@ -120,7 +120,7 @@ if(isset($_POST['delete_course'])){
 
 </section>
 
-<section class="playlists">
+<section class="courses">
    <h1 class="heading">Courses</h1>
    <div class="box-container">
    
@@ -142,17 +142,17 @@ if(isset($_POST['delete_course'])){
             <div><i class="fas fa-calendar"></i><span><?= $fetch_course['date']; ?></span></div>
          </div>
          <div class="thumb">
-            <span><?= $total_videos; ?></span>
+            <span><?= $total_pdfs; ?></span>
             <img src="../uploaded_files/course_thumb/<?= $fetch_course['thumb']; ?>" alt="">
          </div>
          <h3 class="title"><?= $fetch_course['title']; ?></h3>
          <p class="description"><?= $fetch_course['description']; ?></p>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="course_id" value="<?= $course_id; ?>">
-            <a href="update_playlist.php?get_id=<?= $course_id; ?>" class="option-btn">update</a>
+            <a href="update_course.php?get_id=<?= $course_id; ?>" class="option-btn">update</a>
             <input type="submit" value="delete_course" class="delete-btn" onclick="return confirm('Delete this course?');" name="delete">
          </form>
-         <a href="view_playlist.php?get_id=<?= $course_id; ?>" class="btn">view course</a>
+         <a href="view_course.php?get_id=<?= $course_id; ?>" class="btn">view course</a>
       </div>
       <?php
          } 
@@ -168,7 +168,7 @@ if(isset($_POST['delete_course'])){
 <script src="../js/admin_script.js"></script>
 
 <script>
-   document.querySelectorAll('.playlists .box-container .box .description').forEach(content => {
+   document.querySelectorAll('.courses .box-container .box .description').forEach(content => {
       if(content.innerHTML.length > 100) content.innerHTML = content.innerHTML.slice(0, 100);
    });
 </script>

@@ -183,17 +183,6 @@ if(isset($_POST['submit'])){
 
 <!-- registe section ends -->
 
-
-
-
-
-
-
-
-
-
-<?php include '../components/footer.php'; ?>
-
 <script src="../js/admin_script.js"></script>
    
 </body>
