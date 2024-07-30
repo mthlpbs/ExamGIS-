@@ -1,3 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <!-- meta properties -->
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>ExamGIS</title>
+
+   <!-- Fav-icon -->
+   <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+   <link rel="manifest" href="./images/site.webmanifest">
+
+   <!-- font awesome cdn link  -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+   <!-- custom css file link  -->
+   <link rel="stylesheet" href="css/style.css">
+
+</head>
+
 <?php
 
 include 'components/connect.php';
@@ -22,30 +45,8 @@ $select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
 $select_bookmark->execute([$user_id]);
 $total_bookmarked = $select_bookmark->rowCount();
 
-?>
+?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <!-- meta properties -->
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>ExamGIS</title>
-
-   <!-- Fav-icon -->
-   <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
-   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
-   <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
-   <link rel="manifest" href="./images/site.webmanifest">
-
-   <!-- font awesome cdn link  -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
-   <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
-
-</head>
 <body>
 
 <?php include 'components/user_header.php'; ?>
