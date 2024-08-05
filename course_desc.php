@@ -48,25 +48,17 @@ if(isset($_POST['save_list'])){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <!-- primary meta data-->
-   <meta http-equiv="Content-Type" charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="keywords" content="Login,Log in,Signin,Sign in" lang="en">
-   <meta name="title" content="ExamGIS: Your Ultimate Study Companion">
-   <meta name="description" content=" ExamGIS is a user-friendly platform that provides essential study materials for Saegis students. Whether you need resources, textbooks, or past papers, ExamGIS has you covered. It’s designed to support your academic journey and help you excel in your studies">
-   <meta name="language" content="English">
-   <meta name="author" content="TCM inc">
-   <meta name="owner" content="-">
-
    <!-- meta properties -->
-   <title>Category | ExamGIS</title>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Papers - ExamGIS</title>
 
    <!-- Fav-icon -->
-   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon/apple-touch-icon.png">
-   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon/favicon-32x32.png">
-   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon/favicon-16x16.png">
-   <link rel="manifest" href="/site.webmanifest">
+   <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+   <link rel="manifest" href="./images/site.webmanifest">
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">

@@ -38,34 +38,24 @@ if(isset($_POST['submitlogin'])){
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- meta data -->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="./css/login.css">
-        <title>Log In on ExamGIS</title>
-        <meta name="description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey.">
+       <!-- meta properties -->
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+       <title>Login to ExamGIS</title>
 
-        <!-- Fav-icon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
-        <link rel="manifest" href="./images/site.webmanifest">
+       <!-- Fav-icon -->
+       <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+       <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+       <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+       <link rel="manifest" href="./images/site.webmanifest">
 
-        <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="https://examgis.rf.gd">
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="ExamGIS: Your Ultimate Study Companion">
-        <meta property="og:description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey.">
-        <meta property="og:image" content=content="./images/banner.jpg">
+       <!-- font awesome cdn link  -->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-        <!-- Twitter Meta Tags -->
-        <meta name="twitter:card" content="summary_large_image">
-        <meta property="twitter:domain" content="examgis.rf.gd">
-        <meta property="twitter:url" content="https://examgis.rf.gd">
-        <meta name="twitter:title" content="ExamGIS: Your Ultimate Study Companion">
-        <meta name="twitter:description" content="ExamGIS is a comprehensive platform designed to support students at Saegis Campus. Whether you’re looking for resources, textbooks, or past papers, ExamGIS has you covered. Our user-friendly interface provides easy access to essential study materials, helping you excel in your academic journey.">
-        <meta name="twitter:image" content="./images/banner.jpg">
+       <!-- custom css file link  -->
+       <link rel="stylesheet" href="./css/login.css">
+
     </head>
 
     <body>
